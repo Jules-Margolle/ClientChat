@@ -24,10 +24,7 @@ public class Client
     {
         io.toScreen(io.fromNetwork());
 
-        do
-        {
-            io.toNetwork(io.fromScreen());
-        }while(io.fromNetwork().startsWith("Err"));
+        while(!log());
 
         while(true)
         {
@@ -43,9 +40,13 @@ public class Client
                 if(input.equals("MESSAGES"))
                 {
                     int numberOfMessages = Integer.parseInt(serverResponse.substring(serverResponse.indexOf(":") + 1, serverResponse.indexOf(" ")));
-                    for(int i = 0; i < numberOfMessages; i++)
+                    if(numberOfMessages > 0)
                     {
-                        io.toScreen(io.fromNetwork());
+                        for(int i = 0; i < numberOfMessages; i++)
+                        {
+                            String message = io.fromNetwork();
+                            io.toScreen(message);
+                        }
                     }
                 }
                 else if(input.equals("QUIT"))
@@ -53,12 +54,42 @@ public class Client
                     quitCommand();
                     break;
                 }
+                else if(input.equals("USERS"))
+                {
+                    io.toNetwork(input);
+                    int numberOfUsers = Integer.parseInt(serverResponse.substring(serverResponse.indexOf(":") + 1, serverResponse.indexOf(" ")));
+
+                    for(int i = 0 ; i< numberOfUsers; i++)
+                    {
+                        String user = io.fromNetwork();
+                        io.toScreen(user);
+                    }
+
+                }
                 
             }
             else
             {
                 io.toScreen(serverResponse);
             }
+        }
+    }
+
+    boolean log()
+    {
+        String input = io.fromScreen();
+        io.toNetwork(input);
+        String serverResponse = io.fromNetwork();
+        
+        if(serverResponse.startsWith("OK"))
+        {
+            io.toScreen(serverResponse);
+            return true;
+        }
+        else
+        {
+            io.toScreen(serverResponse);
+            return false;
         }
     }
 
