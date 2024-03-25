@@ -56,7 +56,7 @@ public class Client
                 }
                 else if(input.equals("USERS"))
                 {
-                    io.toNetwork(input);
+
                     int numberOfUsers = Integer.parseInt(serverResponse.substring(serverResponse.indexOf(":") + 1, serverResponse.indexOf(" ")));
 
                     for(int i = 0 ; i< numberOfUsers; i++)
